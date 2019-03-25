@@ -1,0 +1,31 @@
+//Jeremiah Hsieh ICSI 500 Project 1 Shell
+
+
+
+
+int main() 
+{
+	//while loop getting input until exit command is recieved
+
+
+	//fork for every subprogram run
+	pid_t pid;
+	//fork 
+	pid = fork();
+	//error
+	if (pid == -1) 
+	{
+		perror("forK");
+		return EXIT_FAILURE:
+	}
+	//child process
+	else if (pid == 0) 
+	{
+		//replace with respective program process
+	}
+	//parent process
+	else
+	{
+		
+	}
+}

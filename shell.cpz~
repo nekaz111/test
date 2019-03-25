@@ -1,0 +1,131 @@
+//Jeremiah Hsieh ICSI 500 Project 1 Shell
+//exit command
+//command with no arguements (display help for command?)
+//command with argument
+//command with/without arguments in background using & (?)
+//command with/without arguments output redirected to file
+
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <vector>
+#include <sys/wait.h>
+
+
+int parseInput(std::string line);
+
+int main(int argc, char* argv) 
+{
+	
+	int running = 1;
+	std::string line = "";
+	//while loop getting input until exit command is recieved
+	while (running == 1)
+	{
+		//int input = 0;
+		//while (input = 0) 
+		//{
+		//get input from user
+		std::cout << "> ";
+		getline(std::cin, line);
+		
+
+		//check if commands are input
+		if (line.empty() != true) {
+			running = parseInput(line);
+		}
+	}
+}
+
+
+//use execl and execvp 
+//char *argv[] = { "ls", "-l", 0 };
+//execvp(argv[0], argv);
+//execv("/bin/ls", argv);
+//get commands from line
+int parseInput(std::string line)
+//int parseInput(char* line)
+{
+	//store parsed commands
+	//std::vector<std::string> parsed;
+	std::vector<char *> parsed;
+	//lazy strtok 
+	char* cline = strdup(line.c_str());
+/*	char* split = strtok(cline, " ");
+	
+	//split line iwth token
+	while (split != NULL)
+	{
+		std::cout << split << std::endl;
+		split = strtok(NULL, " ");
+	}
+*/	
+	char* split;
+	//split by space token and store in vector
+	for(split = strtok(cline, " "); split != NULL; split = strtok(NULL, " "))
+	{
+		parsed.push_back(split);
+	}
+
+	for (int x = 0; x < parsed.size(); x++) 
+	{
+		std::cout << parsed[x] << std::endl;
+	}
+
+	//exit program
+	std::cout << parsed[0] << std::endl;
+        if (strcmp(parsed[0], "exit") == 0)
+	{
+		std::cout << parsed.size() << std::endl;
+		//more command are invalid
+	        if (parsed.size() > 1) 
+		{
+			std::cout << "Too many arguements for exit\n";
+		}
+		else
+		{
+			std::cout << "System exiting\n";
+	        	exit(0);
+		}
+	}
+	//don't check by specific command just parse between pipe calls?
+	
+	//else if(strcmp(parsed[0], "ls") == 0)
+	else
+	{
+		//fork process and run command with child
+		id_t pid = fork();
+                //error checking
+                if (pid == -1)
+                {
+                	perror("forK");
+                        return EXIT_FAILURE;
+                }
+                //child
+                else if (pid == 0)
+                {
+	        	execvp(parsed[0], parsed.data());
+			exit(errno);
+			//running = parseInput(line);
+        	        //running = parseInput(line.c_str());
+                }
+                //parent
+                else
+                {
+                	//wait for child
+	                //waitpid(pid, 0, 0);
+                	//exit(0);
+			int status;
+			wait(&status);
+		}
+	}
+	return 1;
+}
+
+
+//fork and call process based on command line input
+int execute(std::vector<char *> parsed)
+{
+
+}
